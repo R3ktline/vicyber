@@ -24,7 +24,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
         //values
 
-        int VSPosUp = 1350; //2495 is max  // pozitia bara
+        int VSPosUp = 1150; //2495 is max  // pozitia bara
         int hangPos =1440;
         int VBasUp = 2500; // pozitie basket sus
         //int HSPosExt = 100; ///1210 is max
@@ -199,8 +199,29 @@ import com.qualcomm.robotcore.util.ElapsedTime;
                     everythingDoneVerticalRetraction = true;
                 }
             }
-            if ((gamepad1.cross) || !everythingDoneVerticalRetraction) {
-                if (gamepad1.cross){
+            if ((gamepad1.cross) ) { //|| !everythingDoneVerticalRetraction) {
+                OutAngle.setPosition(0.3);
+                OutLeftPivot.setPosition(0);
+                OutRightPivot.setPosition(0);
+                VSLMotor.setTargetPosition(800);
+                VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VSLMotor.setPower(1);
+                VSRMotor.setTargetPosition(800);
+                VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VSRMotor.setPower(1);
+                sleep(700);
+                OutClaw.setPosition(0);
+                sleep(300);
+                OutAngle.setPosition(0.35);
+                OutLeftPivot.setPosition(0.92);
+                OutRightPivot.setPosition(0.92);
+                VSLMotor.setTargetPosition(0);
+                VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VSLMotor.setPower(1);
+                VSRMotor.setTargetPosition(0);
+                VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VSRMotor.setPower(1);
+                /*if (gamepad1.cross){
                     everythingDoneVerticalRetraction = false;
                     timervertical.reset();
                     timervertical.startTime();
@@ -214,6 +235,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
                     OutRightPivot.setPosition(0);
                 }
                 if (timervertical.milliseconds()>900) {
+
                     VSLMotor.setTargetPosition(0);
                     VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     VSLMotor.setPower(1);
@@ -222,6 +244,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
                     VSRMotor.setPower(1);
                     everythingDoneVerticalRetraction = true;
                 }
+                */
             }
 
 
@@ -276,9 +299,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
             // alliance rung up
             if (gamepad1.triangle) {
                 OutClaw.setPosition(0.3);
-                sleep(300);
+                sleep(200);
                 InClaw.setPosition(0);
-                sleep(500);
+                sleep(300);
                 VSLMotor.setTargetPosition(VSPosUp);
                 VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VSLMotor.setPower(1);
