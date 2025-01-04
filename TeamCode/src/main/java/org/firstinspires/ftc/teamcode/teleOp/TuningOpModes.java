@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tuning;
+package org.firstinspires.ftc.teamcode.teleOp;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.reflection.ReflectionConfig;
@@ -26,6 +26,9 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.TankDrive;
 import org.firstinspires.ftc.teamcode.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.TwoDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.tuning.LocalizationTest;
+import org.firstinspires.ftc.teamcode.tuning.ManualFeedbackTuner;
+import org.firstinspires.ftc.teamcode.tuning.SplineTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,10 +38,13 @@ public final class TuningOpModes {
     // TODO: change this to TankDrive.class if you're using tank
     public static final Class<?> DRIVE_CLASS = MecanumDrive.class;
 
+    //public double get.Pose2d.
     public static final String GROUP = "quickstart";
     public static final boolean DISABLED = false;
 
+
     private TuningOpModes() {}
+
 
     private static OpModeMeta metaForClass(Class<? extends OpMode> cls) {
         return new OpModeMeta.Builder()

@@ -1,16 +1,13 @@
-package org.firstinspires.ftc.teamcode.tuning;
-
-import android.net.wifi.aware.ParcelablePeerHandle;
+package org.firstinspires.ftc.teamcode.teleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
+import org.firstinspires.ftc.teamcode.tuning.drivemecanum;
 @TeleOp
-        public class AlTeleOpSurubGood extends LinearOpMode {
+    public class AlTeleOpSurubNew extends LinearOpMode {
 
     double multiplayer = 1.6;
 
@@ -26,21 +23,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         int extended_position = 1200;
         int retracted_position = 0;
 
-        //mecanum motors
 
-        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
-        DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftRear");
-        DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
-        DcMotor backRightMotor = hardwareMap.dcMotor.get("rightRear");
 
         //slider motors
         DcMotor VSLMotor = hardwareMap.dcMotor.get("verticalLeft");
         DcMotor VSRMotor = hardwareMap.dcMotor.get("verticalRight");
         DcMotor HSldMotor = hardwareMap.dcMotor.get("horizontalSlide");
 
-        //mecanum reverse
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //slider reverse
         VSRMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -99,25 +88,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-
-
-
+            new drivemecanum().runOpMode();
             //mecanum functions
             int VSliderPos = VSLMotor.getCurrentPosition();
-            double y = -gamepad1.left_stick_y * multiplayer;
-            double x = gamepad1.left_stick_x * multiplayer;
-            double rx = -gamepad1.right_stick_x * multiplayer;
-
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
-
-            frontLeftMotor.setPower(frontLeftPower);
-            backLeftMotor.setPower(backLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            backRightMotor.setPower(backRightPower);
 
             //sliders function
             int HSld_value = HSldMotor.getCurrentPosition();
@@ -329,6 +302,49 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         }
 
 
+    }
+
+    public static class drivemecan extends LinearOpMode {
+        @Override
+        public void runOpMode() throws InterruptedException {
+
+            //mecanum motors
+
+            DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
+            DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftRear");
+            DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
+            DcMotor backRightMotor = hardwareMap.dcMotor.get("rightRear");
+
+
+            //mecanum reverse
+            frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            double multiplayer =1.6;
+
+            waitForStart();
+            if (isStopRequested()) return;
+
+            while (opModeIsActive()) {
+
+
+                //mecanum functions
+                double y = -gamepad1.left_stick_y * multiplayer;
+                double x = gamepad1.left_stick_x * multiplayer;
+                double rx = -gamepad1.right_stick_x * multiplayer;
+
+                double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+                double frontLeftPower = (y + x + rx) / denominator;
+                double backLeftPower = (y - x + rx) / denominator;
+                double frontRightPower = (y - x - rx) / denominator;
+                double backRightPower = (y + x - rx) / denominator;
+
+                frontLeftMotor.setPower(frontLeftPower);
+                backLeftMotor.setPower(backLeftPower);
+                frontRightMotor.setPower(frontRightPower);
+                backRightMotor.setPower(backRightPower);
+            }
+        }
     }
 }
 

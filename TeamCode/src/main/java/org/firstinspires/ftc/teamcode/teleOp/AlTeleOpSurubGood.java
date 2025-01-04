@@ -1,27 +1,24 @@
-package org.firstinspires.ftc.teamcode.tuning;
+package org.firstinspires.ftc.teamcode.teleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @TeleOp
-    public class TeleOpSurub extends LinearOpMode {
+        public class AlTeleOpSurubGood extends LinearOpMode {
 
     double multiplayer = 1.6;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         //values
 
-        int VSPosUp = 850; //2495 is max
+        int VSPosUp = 1200; //2495 is max pozitia bara
         int hangPos =1440;
-        int VBasUp = 2500;
+        int VBasUp = 2500; // pozitie basket sus
         //int HSPosExt = 100; ///1210 is max
         int extended_position = 1200;
         int retracted_position = 0;
@@ -90,8 +87,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
         OutClaw.setPosition(0);
         OutAngle.setPosition(0.35);
-        OutLeftPivot.setPosition(0.95);
-        OutRightPivot.setPosition(0.95);
+        OutLeftPivot.setPosition(0.92);
+        OutRightPivot.setPosition(0.92);
 
 
 
@@ -100,8 +97,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
         while (opModeIsActive()) {
 
-            //mecanum functions
 
+
+            //mecanum functions
+            int VSliderPos = VSLMotor.getCurrentPosition();
             double y = -gamepad1.left_stick_y * multiplayer;
             double x = gamepad1.left_stick_x * multiplayer;
             double rx = -gamepad1.right_stick_x * multiplayer;
@@ -124,54 +123,49 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
             int VSL_value = VSLMotor.getCurrentPosition();
 
             if(gamepad1.share){
-                multiplayer = 0.5;
+                multiplayer = 0.7;
             }
 
                 //vertical up function on game pad 1 Triangle button
-            if (gamepad1.triangle){
-                VSRMotor.setTargetPosition(VSPosUp);
+            if (gamepad2.dpad_up){
+                OutClaw.setPosition(0.3);
+                sleep(300);
+                InClaw.setPosition(0);
+                InAngle.setPosition(0.9);
+                sleep(400);
+                VSRMotor.setTargetPosition(VBasUp);
                 VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VSRMotor.setPower(1);
-            }
-            if (gamepad1.triangle) {
-                VSLMotor.setTargetPosition(VSPosUp);
-                VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                VSLMotor.setPower(1);
-            }
-
-                //vertical down function on game pad 1 Cross button
-            if (gamepad1.cross) {
-                VSLMotor.setTargetPosition(0);
-                VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                VSLMotor.setPower(1);
-            }
-            if (gamepad1.cross) {
-                VSRMotor.setTargetPosition(0);
-                VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                VSRMotor.setPower(1);
-            }
-            //vertical go to  on game pad 1 Cross button
-            /*
-            if(gamepad1.dpad_up){
                 VSLMotor.setTargetPosition(VBasUp);
                 VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VSLMotor.setPower(1);
-                VSRMotor.setTargetPosition(VBasUp);
-                VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                VSRMotor.setPower(1);
+                OutClaw.setPosition(0.3);
+                sleep(100);
+                OutLeftPivot.setPosition(0.4);
+                OutRightPivot.setPosition(0.4);
+                OutAngle.setPosition(0.3);
             }
 
-             */
-
-            /*if(gamepad1.dpad_up){
-                VSRMotor.setTargetPosition(VBasUp);
+                //vertical down function on game pad 1 Cross button
+            if (gamepad2.dpad_down) {
+                OutClaw.setPosition(0);
+                sleep(400);
+                OutAngle.setPosition(0.35);
+                sleep(100);
+                OutLeftPivot.setPosition(0.92);
+                OutRightPivot.setPosition(0.92);
+                sleep(400);
+                VSLMotor.setTargetPosition(0);
+                VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VSLMotor.setPower(1);
+                VSRMotor.setTargetPosition(0);
                 VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VSRMotor.setPower(1);
+
             }
 
-             */
 
-            if (gamepad2.triangle){
+            /*if (gamepad2.triangle){
                 VSRMotor.setTargetPosition(hangPos);
                 VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VSRMotor.setPower(1);
@@ -194,8 +188,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
                 VSRMotor.setPower(1);
             }
 
+             */
+
                 //horizontal extend function on game pad 1 square button
-            if (gamepad1.circle) {
+            if (gamepad1.square) {
                 HSldMotor.setTargetPosition(extended_position);
                 HSldMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 HSldMotor.setPower(1);
@@ -209,18 +205,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
                 InRightPivot.setPosition(0.3);
                 InLeftPivot.setPosition(0.3);
 
-                multiplayer = 0.5;
+                multiplayer = 0.7;
             }
                 //horizontal retract function on game pad circle
-            if (gamepad1.square) {
+            if (gamepad1.circle) {
 
                 InRightPivot.setPosition(0.35);
                 InLeftPivot.setPosition(0.35);
                 sleep(100);
-                InClaw.setPosition(0.40); //0.35
+                InClaw.setPosition(0.3); //0.35
                 sleep(300);
-                InRightPivot.setPosition(0.05);
-                InLeftPivot.setPosition(0.05);
+                InRightPivot.setPosition(0.1);
+                InLeftPivot.setPosition(0.1);
                 sleep(50);  //100
                 InTwist.setPosition(0.78);
                 sleep(50);  //100
@@ -233,15 +229,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
                 multiplayer = 1.6;
             }
 
-            if (gamepad1.dpad_up) {
+            if (gamepad2.triangle) {
                 OutClaw.setPosition(0.3);
                 sleep(300);
                 InClaw.setPosition(0);
                 sleep(500);
-                VSLMotor.setTargetPosition(VBasUp);
+                VSLMotor.setTargetPosition(VSPosUp);
                 VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VSLMotor.setPower(1);
-                VSRMotor.setTargetPosition(VBasUp);
+                VSRMotor.setTargetPosition(VSPosUp);
                 VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VSRMotor.setPower(1);
                 OutClaw.setPosition(0.3);
@@ -251,16 +247,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
                 OutAngle.setPosition(0.3);
             }
 
-            if (gamepad1.dpad_down) {
-                OutAngle.setPosition(0.65);
-                sleep(300);
+            if (gamepad2.cross) {
                 OutClaw.setPosition(0);
                 sleep(200);
                 OutAngle.setPosition(0.35);
                 sleep(100);
                 OutLeftPivot.setPosition(0.95);
                 OutRightPivot.setPosition(0.95);
-                sleep(500);
+                sleep(300);
                 VSLMotor.setTargetPosition(0);
                 VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VSLMotor.setPower(1);
@@ -268,13 +262,56 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
                 VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VSRMotor.setPower(1);
             }
-
+            //clopen out claw
             if(gamepad1.left_bumper) {
-                InTwist.setPosition(0.10);
+                OutClaw.setPosition(0.3);
             }
 
             if(gamepad1.right_bumper) {
-                InTwist.setPosition(-0.10);
+                OutClaw.setPosition(0);
+            }
+            // up/dowm vertcal slide
+
+            if (gamepad2.right_bumper){
+                VSliderPos=VSliderPos+100;
+                VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VSRMotor.setTargetPosition(VSliderPos);
+                VSLMotor.setTargetPosition(VSliderPos);
+                VSRMotor.setPower(1);
+                VSLMotor.setPower(1);
+            }
+
+            if (gamepad2.left_bumper){
+                VSliderPos=VSliderPos-100;
+                VSLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VSRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VSRMotor.setTargetPosition(VSliderPos);
+                VSLMotor.setTargetPosition(VSliderPos);
+                VSRMotor.setPower(1);
+                VSLMotor.setPower(1);
+            }
+
+            if(gamepad1.dpad_left){
+                InAngle.setPosition(0.7);
+                sleep(200);
+                OutClaw.setPosition(0);
+                OutLeftPivot.setPosition(0.1);
+                OutRightPivot.setPosition(0.1);
+                OutAngle.setPosition(0.55);
+
+            }
+
+            if(gamepad1.dpad_right){
+                OutClaw.setPosition(0.3);
+                sleep(100);
+                OutAngle.setPosition(0.8);
+                sleep(200);
+                OutLeftPivot.setPosition(0.4);
+                OutRightPivot.setPosition(0.4);
+                sleep(200);
+                OutAngle.setPosition(0.2);
+
             }
 
 
@@ -284,6 +321,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
             telemetry.addData("Horizontal Destination", HSld_dest_value);
             telemetry.addData("verticalRightValue", VSR_value);
             telemetry.addData("verticalLeftValue", VSL_value);
+            telemetry.addData("verticalLeftValue",OutClaw.getPosition());
             telemetry.update();
         }
 
