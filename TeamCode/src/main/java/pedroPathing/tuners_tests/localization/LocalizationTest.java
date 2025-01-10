@@ -12,6 +12,11 @@ import static com.pedropathing.follower.FollowerConstants.rightRearMotorDirectio
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+<<<<<<< Updated upstream
+=======
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.Vector;
+>>>>>>> Stashed changes
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -50,6 +55,10 @@ public class LocalizationTest extends OpMode {
     private DcMotorEx rightRear;
     private List<DcMotorEx> motors;
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     /**
      * This initializes the PoseUpdater, the mecanum drive motors, and the FTC Dashboard telemetry.
      */
@@ -64,6 +73,11 @@ public class LocalizationTest extends OpMode {
         leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
         rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
         rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
         leftFront.setDirection(leftFrontMotorDirection);
         leftRear.setDirection(leftRearMotorDirection);
         rightFront.setDirection(rightFrontMotorDirection);
@@ -78,16 +92,41 @@ public class LocalizationTest extends OpMode {
         }
 
         for (DcMotorEx motor : motors) {
+<<<<<<< Updated upstream
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+=======
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+>>>>>>> Stashed changes
         }
 
         telemetryA = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetryA.addLine("This will print your robot's position to telemetry while "
                 + "allowing robot control through a basic mecanum drive on gamepad 1.");
+<<<<<<< Updated upstream
+=======
+        telemetryA.addData("x", poseUpdater.getPose().getX());
+        telemetryA.addData("y", poseUpdater.getPose().getY());
+        telemetryA.addData("heading", poseUpdater.getPose().getHeading());
+        telemetryA.addData("total heading", poseUpdater.getTotalHeading());
+>>>>>>> Stashed changes
         telemetryA.update();
 
         Drawing.drawRobot(poseUpdater.getPose(), "#4CAF50");
         Drawing.sendPacket();
+<<<<<<< Updated upstream
+=======
+
+        leftFront.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+
+>>>>>>> Stashed changes
     }
 
     /**
@@ -96,12 +135,26 @@ public class LocalizationTest extends OpMode {
      */
     @Override
     public void loop() {
+<<<<<<< Updated upstream
         poseUpdater.update();
         dashboardPoseTracker.update();
 
         double y = -gamepad1.left_stick_y; // Remember, this is reversed!
         double x = gamepad1.left_stick_x; // this is strafing
         double rx = gamepad1.right_stick_x;
+=======
+
+
+
+        poseUpdater.update();
+        dashboardPoseTracker.update();
+
+
+
+        double y = -gamepad1.left_stick_y; // Remember, this is reversed!
+        double x = gamepad1.left_stick_x; // this is strafing
+        double rx = -gamepad1.right_stick_x;
+>>>>>>> Stashed changes
 
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio, but only when
@@ -112,10 +165,26 @@ public class LocalizationTest extends OpMode {
         double rightFrontPower = (y - x - rx) / denominator;
         double rightRearPower = (y + x - rx) / denominator;
 
+<<<<<<< Updated upstream
         leftFront.setPower(leftFrontPower);
         leftRear.setPower(leftRearPower);
         rightFront.setPower(rightFrontPower);
         rightRear.setPower(rightRearPower);
+=======
+        if(gamepad1.left_bumper){
+            leftFront.setPower(leftFrontPower *0.5);
+            leftRear.setPower(leftRearPower*0.5);
+            rightFront.setPower(rightFrontPower*0.5);
+            rightRear.setPower(rightRearPower*0.5);
+        }
+        else {
+            leftFront.setPower(leftFrontPower);
+            leftRear.setPower(leftRearPower);
+            rightFront.setPower(rightFrontPower);
+            rightRear.setPower(rightRearPower);
+        }
+
+>>>>>>> Stashed changes
 
         telemetryA.addData("x", poseUpdater.getPose().getX());
         telemetryA.addData("y", poseUpdater.getPose().getY());
