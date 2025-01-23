@@ -56,15 +56,25 @@ public class Intake_Test extends LinearOpMode {
     boolean isHorizontalIn = true;
     boolean isIntakeLowered = false;
     boolean to_Transfer = false;
+    boolean Start_Basket = false;
     boolean StartIntake=false;
     boolean Start_Transfer=false;
     boolean is_Outake=false;
     int HorizontalTarget = 0;
+    boolean VerticalSliderIn=true;
+    boolean isOutakeReady = false;
+    boolean isIntakeReady = true;
+    boolean isBasketReady = false;
     int outHorizontal=0; ///De scris val
+    int inVerticalPosition=0; ///De scris val - poz vertical init
+    int VerticalTarget = 0; ///De scris val - poz init slider vertical
+    int BasketPositon = 0; ///De scris val - poz glisiera verticala basket
     int HorizontalRetras=0; ///De scris val
     int inHorizontal=0; ///De scris val
     ElapsedTime Intake_timer=new ElapsedTime();
     ElapsedTime Transfer_timer=new ElapsedTime();
+    ElapsedTime Basket_timer=new ElapsedTime();
+    ElapsedTime Basket_drop_timer=new ElapsedTime();
 
 
 
@@ -194,25 +204,26 @@ public class Intake_Test extends LinearOpMode {
 
 
 
-                if(gamepad1.triangle && isHorizontalIn==true){
+                if(GameMode==true && gamepad1.right_bumper && isHorizontalIn==true && isIntakeReady==true){
                     HorizontalTarget= outHorizontal ;
                     isHorizontalIn=false;
+                    isIntakeReady=false;
                     To_Intake_1();
                 }
-                else if(gamepad1.right_trigger>0.3 && isHorizontalIn==false){
+                else if(GameMode==true && gamepad1.right_trigger>0.3 && isHorizontalIn==false){
                     To_Intake_2();
                     isIntakeLowered=true;
                 }
-                else if(isHorizontalIn==false) {
+                else if(GameMode==true && isHorizontalIn==false) {
                     To_Intake_1();
                     isIntakeLowered=false;
                 }
-                else if(gamepad1.right_bumper && isIntakeLowered==true && StartIntake==false){
+                else if(GameMode==true && gamepad1.right_bumper && isIntakeLowered==true && StartIntake==false){
                     To_Intake_3();
                     StartIntake=true;
                     Intake_timer=new ElapsedTime();
                 }
-                else if(isIntakeLowered==true && StartIntake==true){
+                else if(GameMode==true && isIntakeLowered==true && StartIntake==true){
                     if(Intake_timer.time()>1000 && Intake_timer.time()<2000){
                         To_Intake_4();
                     }
@@ -224,11 +235,11 @@ public class Intake_Test extends LinearOpMode {
                         to_Transfer=true;
                     }
                 }
-                else if(isHorizontalIn==true && to_Transfer==true && Start_Transfer==false){
+                else if(GameMode==true && isHorizontalIn==true && to_Transfer==true && Start_Transfer==false){
                     Transfer_timer=new ElapsedTime();
                     Start_Transfer=true;
                 }
-                else if(to_Transfer==true && Start_Transfer==true){
+                else if(GameMode==true && to_Transfer==true && Start_Transfer==true){
                     if(Transfer_timer.time()>1000 && Transfer_timer.time()<2000){
                         To_Transfer_1(); ///Ambele inchise
                     }
@@ -247,9 +258,50 @@ public class Intake_Test extends LinearOpMode {
                         HorizontalTarget=inHorizontal;
                         to_Transfer=false;
                         Start_Transfer=false;
+                        isOutakeReady=false;
                     }
                 }
+                else  if(GameMode==true && isOutakeReady==true && VerticalSliderIn==true && gamepad1.left_bumper && Start_Basket==false) {
+                    Start_Basket=true;
+                    Basket_timer.reset();
+                }
+                else if(GameMode==true && isOutakeReady==true && VerticalSliderIn==true && Start_Basket==true) {
+                    if(Basket_timer.time()>500 && Basket_timer.time()<2000) {
+                        VerticalTarget=BasketPositon;
+                    }
+                    else if(Basket_timer.time()>2000){
+                        To_BasketDrop();
+                        VerticalSliderIn=false;
+                        Start_Basket=false;
+                        isOutakeReady=false;
+                        isBasketReady=true;
+                    }
+                }
+                else if(GameMode==true && VerticalSliderIn==false && isBasketReady==true && gamepad1.left_bumper) {
+                    Basket_drop_timer.reset();
+                    if(Basket_drop_timer.time()>500 && Basket_drop_timer.time()<1000){
+                        to_Basket_Release(); ///drop
+                    }
+                    else if(Basket_drop_timer.time()>1000 && Basket_drop_timer.time()<1500){
+                        to_Inside(); ///servo inside
+                    }
+                    else if(Basket_drop_timer.time()>1500 && Basket_drop_timer.time()<2000){
+                        VerticalTarget=inVerticalPosition;
+                        VerticalSliderIn=true;
+                        to_Init();
+                        isIntakeReady=true;
+                        isBasketReady=false;
+                    }
+                }
+                ///Sistem = Specimen
+                ///left bumper- positie luat de pe perete ->cand e hold deschis, cand release->inchis
+                ///screenshot (bumper+trgger) - luat de pe perete
+                ///left trigger - brat in pozitie de agatat
 
+                ///Sistem = Intake Human Player
+                ///Right_Trigeer = glisere+servo in poz de luat
+                ///Right_bumper = gheara sus-jos epileptic
+                ///Screenshot = ia si se retrage
 
 
 
@@ -544,11 +596,20 @@ public class Intake_Test extends LinearOpMode {
                 telemetry.update();
             }
         }
+        private void to_Init(){
+            ///Init - state initial
+        }
         private void To_Intake_1() {
             ///
         }
         private void To_Intake_2() {
             ///
+        }
+        private void to_Basket_Release(){
+            ///drop la element
+        }
+        private void to_Inside(){
+            ///Servo de sus inside
         }
         private void To_Intake_3() {
             ///
@@ -565,6 +626,9 @@ public class Intake_Test extends LinearOpMode {
         private void Outake_Out() {
             ///
         }
+        private void To_BasketDrop() { /// Gheara in pozitie pentru a da drop(NU e deschisa)
+            ///
+        }
     private void horizontalSliders(){
         HSldMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         HSldMotor.setTargetPosition(HorizontalTarget);
@@ -574,9 +638,5 @@ public class Intake_Test extends LinearOpMode {
             HSldMotor.setPower(1);
         }
     }
-
-
-
-
 
     }
