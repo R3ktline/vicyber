@@ -37,7 +37,10 @@ public class Autonomie extends OpMode {
                       toFirstSample, pushFirstSample,
                       toSecondSample, pushSecondSample,
                       toThirdSample, pushThirdSample,
-                      theRest;
+                      toFirstSpecimen, toBarWithFirstSpecimen,
+                      toSecondSpecimen, toBarWithSecondSpecimen,
+                      toThirdSpecimen, toBarWithThirdSpecimen,
+                      toPark;
 
     // extra data:
     private Telemetry telemetry;
@@ -118,9 +121,76 @@ public class Autonomie extends OpMode {
                 break;
             case 8:
                 if(!follower.isBusy()) {
-                    follower.followPath(theRest, true);
+                    follower.followPath(toFirstSample, true);
+                    state = 9;
+                }
+                break;
+            case 9:
+                if(!follower.isBusy()) {
+                    follower.followPath(toFirstSpecimen, true);
+                    state = 10;
+                }
+                break;
+            case 10:
+                // make arm take first specimen
+                state = 11;
+                break;
+            case 11:
+                if(!follower.isBusy()) {
+                    follower.followPath(toBarWithSecondSpecimen);
+                    state = 12;
+                }
+                break;
+            case 12:
+                // make arm put second specimen on bar
+                state = 13;
+                break;
+            case 13:
+                if(!follower.isBusy()) {
+                    follower.followPath(toSecondSpecimen, true);
+                    state = 14;
+                }
+                break;
+            case 14:
+                // make arm take second specimen
+                state = 15;
+                break;
+            case 15:
+                if(!follower.isBusy()) {
+                    follower.followPath(toBarWithSecondSpecimen);
+                    state = 16;
+                }
+                break;
+            case 16:
+                // make arm put second specimen on bar
+                state = 17;
+                break;
+            case 17:
+                if(!follower.isBusy()) {
+                    follower.followPath(toThirdSpecimen, true);
+                    state = 18;
+                }
+                break;
+            case 19:
+                // make arm take third specimen
+                state = 20;
+                break;
+            case 20:
+                if(!follower.isBusy()) {
+                    follower.followPath(toBarWithThirdSpecimen);
+                    state = 21;
+                }
+                break;
+            case 21:
+                // make arm put first specimen on bar
+                state = 22;
+                break;
+            case 22:
+                if(!follower.isBusy()) {
+                    follower.followPath(toPark);
                     state = -1;
                 }
+                break;
         }
     }
 
@@ -214,7 +284,7 @@ public class Autonomie extends OpMode {
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                 .build();
 
-        theRest = follower.pathBuilder()
+        toFirstSpecimen = follower.pathBuilder()
                 .addPath(
                         // Line 9
                         new BezierLine(
@@ -223,6 +293,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        toBarWithFirstSpecimen = follower.pathBuilder()
                 .addPath(
                         // Line 10
                         new BezierLine(
@@ -231,6 +304,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        toSecondSpecimen = follower.pathBuilder()
                 .addPath(
                         // Line 11
                         new BezierLine(
@@ -239,6 +315,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        toBarWithSecondSpecimen = follower.pathBuilder()
                 .addPath(
                         // Line 12
                         new BezierLine(
@@ -247,6 +326,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        toThirdSpecimen = follower.pathBuilder()
                 .addPath(
                         // Line 13
                         new BezierLine(
@@ -255,6 +337,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        toBarWithThirdSpecimen = follower.pathBuilder()
                 .addPath(
                         // Line 14
                         new BezierLine(
@@ -263,6 +348,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        toPark = follower.pathBuilder()
                 .addPath(
                         // Line 15
                         new BezierLine(
