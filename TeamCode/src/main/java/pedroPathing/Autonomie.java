@@ -139,7 +139,7 @@ public class Autonomie extends OpMode {
                 break;
             case 11:
                 if(!follower.isBusy()) {
-                    follower.followPath(toBarWithSecondSpecimen);
+                    follower.followPath(toBarWithFirstSpecimen);
                     state = 12;
                 }
                 break;
