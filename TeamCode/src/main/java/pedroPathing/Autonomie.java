@@ -13,11 +13,13 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 @Autonomous (name = "AutonomieCustom", group = "Autonomii")
-public class Autonomie extends OpMode{
+public class Autonomie extends OpMode {
 
     // width 204mm, length 406mm
     // 37cm latime 40.5 lungime
@@ -27,12 +29,25 @@ public class Autonomie extends OpMode{
 
     private final Pose startPose = new Pose(10.1, 47.8);
 
+    private Telemetry telemetry;
+    private Timer timer;
+
     @Override
     public void init() {
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
         buildPaths();
+    }
+
+    @Override
+    public void start() {
+        timer.resetTimer();
+    }
+
+    @Override
+    public void stop() {
+        telemetry.addData("Autonomous path finished. Time elapsed: ", timer.getElapsedTime());
     }
 
     @Override
