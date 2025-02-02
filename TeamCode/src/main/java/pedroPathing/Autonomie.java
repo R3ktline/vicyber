@@ -69,49 +69,45 @@ public class Autonomie extends OpMode {
     public void startPathFollowing() {
         switch (state) {
             case 0:
-                follower.followPath(toFirstSample);
+                follower.followPath(toFirstSample, true);
                 state = 1;
                 break;
             case 1:
                 if (!follower.isBusy()) {
-                    follower.followPath(pushFirstSample);
+                    follower.followPath(pushFirstSample, true);
                     state = 2;
                 }
                 break;
             case 2:
                 if (!follower.isBusy()) {
-                    follower.followPath(toSecondSample);
+                    follower.followPath(toSecondSample, true);
                     state = 3;
                 }
                 break;
             case 3:
                 if (!follower.isBusy()) {
-                    follower.followPath(pushSecondSample);
+                    follower.followPath(pushSecondSample, true);
                     state = 4;
                 }
                 break;
             case 4:
                 if (!follower.isBusy()) {
-                    follower.followPath(toThirdSample);
+                    follower.followPath(toThirdSample, true);
                     state = 5;
                 }
                 break;
             case 5:
                 if (!follower.isBusy()) {
-                    follower.followPath(pushThirdSample);
+                    follower.followPath(pushThirdSample, true);
                     state = 6;
                 }
                 break;
             case 6:
                 if (!follower.isBusy()) {
-                    follower.followPath(theRest);
+                    follower.followPath(theRest, true);
                     state = -1;
                 }
                 break;
-        }
-        if(!follower.isBusy()) {
-            follower.followPath(toFirstSample, true);
-            state = 1;
         }
     }
 
@@ -252,7 +248,7 @@ public class Autonomie extends OpMode {
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                 .addPath(
-                        // Line 17
+                        // Line 15
                         new BezierLine(
                                 new Point(33.873, 62.182, Point.CARTESIAN),
                                 new Point(7.899, 15.634, Point.CARTESIAN)
