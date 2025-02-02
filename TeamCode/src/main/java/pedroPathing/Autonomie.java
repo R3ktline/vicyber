@@ -12,6 +12,7 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -44,7 +45,7 @@ public class Autonomie extends OpMode {
 
     // extra data:
     private Telemetry telemetry;
-    private Timer timer;
+    private Timer timer = new Timer();
 
     // events:
     @Override
@@ -81,6 +82,7 @@ public class Autonomie extends OpMode {
                 break;
             case 1:
                 // put prepload on bar
+                telemetry.addData("Put preload on bar", Autonomie.class);
                 state = 2;
                 break;
             case 2:
