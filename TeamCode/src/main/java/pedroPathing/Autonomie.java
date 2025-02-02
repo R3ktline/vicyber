@@ -33,7 +33,11 @@ public class Autonomie extends OpMode {
     private final Pose startPose = new Pose(10.1, 47.8);
 
     // paths:
-    private PathChain toFirstSample, pushFirstSample, toSecondSample, pushSecondSample, toThirdSample, pushThirdSample, theRest;
+    private PathChain toBarWithPreload,
+                      toFirstSample, pushFirstSample,
+                      toSecondSample, pushSecondSample,
+                      toThirdSample, pushThirdSample,
+                      theRest;
 
     // extra data:
     private Telemetry telemetry;
@@ -69,51 +73,60 @@ public class Autonomie extends OpMode {
     public void startPathFollowing() {
         switch (state) {
             case 0:
-                follower.followPath(toFirstSample, true);
+                follower.followPath(toBarWithPreload, true);
                 state = 1;
                 break;
             case 1:
-                if (!follower.isBusy()) {
-                    follower.followPath(pushFirstSample, true);
-                    state = 2;
-                }
+                // put prepload on bar
+                state = 2;
                 break;
             case 2:
                 if (!follower.isBusy()) {
-                    follower.followPath(toSecondSample, true);
-                    state = 3;
+                    follower.followPath(toFirstSample, true);
+                    state = 2;
                 }
                 break;
             case 3:
                 if (!follower.isBusy()) {
-                    follower.followPath(pushSecondSample, true);
-                    state = 4;
+                    follower.followPath(pushFirstSample, true);
+                    state = 3;
                 }
                 break;
             case 4:
                 if (!follower.isBusy()) {
-                    follower.followPath(toThirdSample, true);
-                    state = 5;
+                    follower.followPath(toSecondSample, true);
+                    state = 4;
                 }
                 break;
             case 5:
                 if (!follower.isBusy()) {
-                    follower.followPath(pushThirdSample, true);
-                    state = 6;
+                    follower.followPath(pushSecondSample, true);
+                    state = 5;
                 }
                 break;
             case 6:
                 if (!follower.isBusy()) {
+                    follower.followPath(toThirdSample, true);
+                    state = 6;
+                }
+                break;
+            case 7:
+                if (!follower.isBusy()) {
+                    follower.followPath(pushThirdSample, true);
+                    state = 8;
+                }
+                break;
+            case 8:
+                if(!follower.isBusy()) {
                     follower.followPath(theRest, true);
                     state = -1;
                 }
-                break;
         }
     }
 
     // build all paths:
     public void buildPaths() {
-        toFirstSample = follower.pathBuilder()
+        toBarWithPreload = follower.pathBuilder()
                 .addPath(
                         // Line 1
                         new BezierLine(
@@ -122,6 +135,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        toFirstSample = follower.pathBuilder()
                 .addPath(
                         // Line 2
                         new BezierLine(
