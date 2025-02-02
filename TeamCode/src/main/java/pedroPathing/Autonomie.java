@@ -25,7 +25,17 @@ public class Autonomie extends OpMode {
     // 37cm latime 40.5 lungime
 
     private Follower follower;
-    private PathChain mainPath;
+
+    private int state = 0;
+
+    // paths:
+    private PathChain toFirstSample;
+    private PathChain pushFirstSample;
+    private PathChain toSecondSample;
+    private PathChain pushSecondSample;
+    private PathChain toThirdSample;
+    private PathChain pushThirdSample;
+    private PathChain theRest;
 
     private final Pose startPose = new Pose(10.1, 47.8);
 
@@ -43,11 +53,12 @@ public class Autonomie extends OpMode {
     @Override
     public void start() {
         timer.resetTimer();
+        state = 0;
     }
 
     @Override
     public void stop() {
-        telemetry.addData("Autonomous path finished. Time elapsed: ", timer.getElapsedTime());
+        telemetry.addData("All autonomous paths finished. Time elapsed: ", timer.getElapsedTime());
     }
 
     @Override
@@ -57,13 +68,56 @@ public class Autonomie extends OpMode {
     }
 
     public void startPathFollowing() {
+        switch (state) {
+            case 0:
+                follower.followPath(toFirstSample);
+                state = 1;
+                break;
+            case 1:
+                if (!follower.isBusy()) {
+                    follower.followPath(pushFirstSample);
+                    state = 2;
+                }
+                break;
+            case 2:
+                if (!follower.isBusy()) {
+                    follower.followPath(toSecondSample);
+                    state = 3;
+                }
+                break;
+            case 3:
+                if (!follower.isBusy()) {
+                    follower.followPath(pushSecondSample);
+                    state = 4;
+                }
+                break;
+            case 4:
+                if (!follower.isBusy()) {
+                    follower.followPath(toThirdSample);
+                    state = 5;
+                }
+                break;
+            case 5:
+                if (!follower.isBusy()) {
+                    follower.followPath(pushThirdSample);
+                    state = 6;
+                }
+                break;
+            case 6:
+                if (!follower.isBusy()) {
+                    follower.followPath(theRest);
+                    state = -1;
+                }
+                break;
+        }
         if(!follower.isBusy()) {
-            follower.followPath(mainPath, true);
+            follower.followPath(toFirstSample, true);
+            state = 1;
         }
     }
 
     public void buildPaths() {
-        mainPath = follower.pathBuilder()
+        toFirstSample = follower.pathBuilder()
                 .addPath(
                         // Line 1
                         new BezierLine(
@@ -89,6 +143,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        pushFirstSample = follower.pathBuilder()
                 .addPath(
                         // Line 4
                         new BezierLine(
@@ -97,6 +154,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        toSecondSample = follower.pathBuilder()
                 .addPath(
                         // Line 5
                         new BezierCurve(
@@ -106,6 +166,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build()
+
+        pushSecondSample = follower.pathBuilder()
                 .addPath(
                         // Line 6
                         new BezierLine(
@@ -114,6 +177,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        toThirdSample = follower.pathBuilder()
                 .addPath(
                         // Line 7
                         new BezierCurve(
@@ -123,6 +189,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        pushSecondSample = follower.pathBuilder()
                 .addPath(
                         // Line 8
                         new BezierLine(
@@ -131,6 +200,9 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+
+        theRest = follower.pathBuilder()
                 .addPath(
                         // Line 9
                         new BezierLine(
