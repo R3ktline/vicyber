@@ -21,27 +21,25 @@ import pedroPathing.constants.LConstants;
 @Autonomous (name = "AutonomieCustom", group = "Autonomii")
 public class Autonomie extends OpMode {
 
-    // width 204mm, length 406mm
     // 37cm latime 40.5 lungime
+    // pedroPathing size: 14.5, 16 (in inches)
 
     private Follower follower;
 
+    // current path state:
     private int state = 0;
 
-    // paths:
-    private PathChain toFirstSample;
-    private PathChain pushFirstSample;
-    private PathChain toSecondSample;
-    private PathChain pushSecondSample;
-    private PathChain toThirdSample;
-    private PathChain pushThirdSample;
-    private PathChain theRest;
-
+    // start pose:
     private final Pose startPose = new Pose(10.1, 47.8);
 
+    // paths:
+    private PathChain toFirstSample, pushFirstSample, toSecondSample, pushSecondSample, toThirdSample, pushThirdSample, theRest;
+
+    // extra data:
     private Telemetry telemetry;
     private Timer timer;
 
+    // events:
     @Override
     public void init() {
         Constants.setConstants(FConstants.class, LConstants.class);
@@ -67,6 +65,7 @@ public class Autonomie extends OpMode {
         startPathFollowing();
     }
 
+    // decide what path to follow based on current path state and weather the follower is currently busy:
     public void startPathFollowing() {
         switch (state) {
             case 0:
@@ -116,6 +115,7 @@ public class Autonomie extends OpMode {
         }
     }
 
+    // build all paths:
     public void buildPaths() {
         toFirstSample = follower.pathBuilder()
                 .addPath(
@@ -166,7 +166,7 @@ public class Autonomie extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
-                .build()
+                .build();
 
         pushSecondSample = follower.pathBuilder()
                 .addPath(
@@ -191,7 +191,7 @@ public class Autonomie extends OpMode {
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                 .build();
 
-        pushSecondSample = follower.pathBuilder()
+        pushThirdSample = follower.pathBuilder()
                 .addPath(
                         // Line 8
                         new BezierLine(
@@ -248,22 +248,6 @@ public class Autonomie extends OpMode {
                         new BezierLine(
                                 new Point(16.691, 36.000, Point.CARTESIAN),
                                 new Point(34.200, 64.964, Point.CARTESIAN)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
-                .addPath(
-                        // Line 15
-                        new BezierLine(
-                                new Point(34.200, 64.964, Point.CARTESIAN),
-                                new Point(16.364, 35.509, Point.CARTESIAN)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
-                .addPath(
-                        // Line 16
-                        new BezierLine(
-                                new Point(16.364, 35.509, Point.CARTESIAN),
-                                new Point(33.873, 62.182, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
