@@ -77,6 +77,7 @@ public class Autonomie extends OpMode {
     public void log(String message) {
         telemetry.addData(message, timer.getElapsedTime());
         telemetry.update();
+        timer.resetTimer();
     }
 
     // decide what path to follow based on current path state and weather the follower is currently busy:
